@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table border="1">
+    {% for key, value in result.items() %}
+
+    <tr>
+        <th>
+            {{key.upper()}}
+        </th>
+        <td>
+            {{value.upper()}}
+        </td>
+    </tr>
+
+    {% endfor %}
+</table>
+
+<p>Queue number: A1234</p>
+<p>Please collect your Naviband below</p>
+{% endblock %}
