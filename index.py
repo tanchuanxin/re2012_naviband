@@ -52,7 +52,7 @@ def database(input=None):
     elif func == "create":
         db_helper('''CREATE TABLE users (nric CHAR(9) NOT NULL PRIMARY KEY, name VARCHAR(45) NOT NULL, age TINYINT NOT NULL, lastUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)''')
         db_helper('''CREATE TABLE ble_data (beaconID VARCHAR(45) NOT NULL PRIMARY KEY, rssiValue INT NULL, lastUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)''')
-        db_helper('''CREATE TABLE instructions (queueNumber CHAR(8) NOT NULL, vibrate TINYINT NOT NULL, direction VARCHAR(10) DEFAULT NULL, appointmentTime DATETIME DEFAULT NULL, appointmentVenue VARCHAR(45) DEFAULT NULL, lastUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)''')
+        db_helper('''CREATE TABLE instructions (queueNumber CHAR(8) NOT NULL PRIMARY KEY, vibrate TINYINT NOT NULL, direction VARCHAR(10) DEFAULT NULL, appointmentTime DATETIME DEFAULT NULL, appointmentVenue VARCHAR(45) DEFAULT NULL, lastUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)''')
 
     # /db/?func=insert
     elif func == "insert":

@@ -1,17 +1,22 @@
 #include <ESP8266WiFi.h>
 
-const char* ssid     = "Whizz";      // SSID of local network
-const char* password = "2billion";   // Password on network
+const char* ssid     = "Whizz";           // SSID of local network
+const char* password = "2billion";        // Password on network
+const char* ipv4_address = "192.168.1.81"; // IPv4 address obtained from cmd --> ipconfig
+const char* host_name = "Host: 192.168.1.81"; // hostname for localhost
 
 WiFiClient client;
-char servername[]="192.168.1.81";  // remote server we will connect to. will be your local ip address. run cmd and then "ipconfig" to find
+const char* servername=ipv4_address;
 String result;
 
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  Serial.println("------------Beginning setup------------");
+
+
+  // CONNECTING TO WIFI NETWORK
+  Serial.println("------------Beginning WiFi setup------------");
   Serial.println("Connecting to WiFi");
   
   WiFi.begin(ssid, password);
@@ -22,27 +27,31 @@ void setup() {
   
   Serial.println("Connected to WiFi");
   delay(1000);
-  Serial.println("------------Finish setup------------");
+  Serial.println("------------Finish WiFi setup------------");
 }
+
 
 void loop() {
   // put your main code here, to run repeatedly:
-  Serial.println("Getting data");
-  getData();
-  delay(1000);
 
+  // for sending BLE data
   Serial.println("Sending data");
   sendData();
   delay(1000);
 
-  
+  // for getting instructions for arduino
+  Serial.println("Getting instructions");
+  getInstructions();
+  delay(1000);
 }
 
-void getData()
+
+
+void sendData()
 {
   if (client.connect(servername, 80)) {  //starts client connection, checks for connection
-    client.println("GET /getdata");
-    client.println("Host: 192.168.1.82");
+    client.println("GET /sendData?beaconID=beacon01&rssiValue=456");
+    client.println(host_name);
     client.println("User-Agent: Naviband");
     client.println("Connection: close");
     client.println();
@@ -64,13 +73,15 @@ void getData()
   Serial.println(result);
 }
 
-void sendData()
-{
-  String data = "123";
 
+
+
+// used by arduino to receive instructions from the server
+void getInstructions()
+{
   if (client.connect(servername, 80)) {  //starts client connection, checks for connection
-    client.println("GET /senddata?data=" + data);
-    client.println("Host: 192.168.1.82");
+    client.println("GET /getInstructions");
+    client.println(host_name);
     client.println("User-Agent: Naviband");
     client.println("Connection: close");
     client.println();
