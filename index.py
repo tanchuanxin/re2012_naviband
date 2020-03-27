@@ -58,7 +58,7 @@ def database(input=None):
     elif func == "insert":
         db_helper('''INSERT IGNORE INTO users (nric, name, age) VALUES ('S1234567A', 'Tan Chuan Xin', 23)''')
         for i in range(1, 13):
-            db_helper('''INSERT IGNORE INTO ble_data (beaconID, rssiValue) VALUES (%s, %s)''', ("beacon"+f"{i:02d}", 0) )
+            db_helper('''INSERT IGNORE INTO ble_data (beaconID, rssiValue) VALUES (%s, %s)''', ("beacon"+str(i), 0) )
         db_helper('''INSERT IGNORE INTO instructions (queueNumber, vibrate) VALUES (%s, %s)''', ("A123456F", 0))
 
     # /db/?func=reset
