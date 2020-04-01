@@ -1,16 +1,18 @@
 *DB hosting site*
-https://www.freemysqlhosting.net/account/
+https://remotemysql.com/dashboard.php
 
+*MySQL workbench connecetion details*
+Username: x9ROzKhVaW
+Database name: x9ROzKhVaW
+Password: 9aO1rg6Nn3
+Server: remotemysql.com
+Port: 3306
+
+*install some stuff first*
 *pip install*
 pip install Flask
 pip install flask-mysql
 
-*MySQL workbench connecetion details*
-server: sql12.freemysqlhosting.net
-name: sql12329145
-username: sql12329145
-password: m88dXRMc7r
-port number: 3306
 
 *Run your flask app*
 set FLASK_APP=index.py
@@ -19,5 +21,3 @@ python index.py
 
 *Find your IP address*
 cmd -> ipconfig -> look for IPv4 address
-
-//

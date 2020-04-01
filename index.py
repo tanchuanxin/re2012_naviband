@@ -12,13 +12,12 @@ app = Flask(__name__)
 
 ### Database configuration
 app.config['SECRET_KEY'] = 'naviband'
-app.config['MYSQL_USER'] = 'sql12329145'
-app.config['MYSQL_PASSWORD'] = 'm88dXRMc7r'
-app.config['MYSQL_HOST'] = 'sql12.freemysqlhosting.net'
-app.config['MYSQL_DB'] = 'sql12329145'
+app.config['MYSQL_USER'] = 'x9ROzKhVaW'
+app.config['MYSQL_PASSWORD'] = '9aO1rg6Nn3'
+app.config['MYSQL_HOST'] = 'remotemysql.com'
+app.config['MYSQL_DB'] = 'x9ROzKhVaW'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
-
 
 
 
