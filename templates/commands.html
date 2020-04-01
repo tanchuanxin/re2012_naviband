@@ -1,0 +1,201 @@
+{% extends 'base.html' %} {% block head %}
+<title>Commands</title>
+{% endblock %} {% block body %}
+<br />
+<h1>Commands</h1>
+<hr />
+<br />
+
+<div style="display: flex; flex-direction: row;">
+  <div style="flex-basis: 50%;">
+    <h1>Arduino Instructions</h1>
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=vibrate&value=0"
+      >Vibrate Off</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=vibrate&value=1"
+      >Vibrate On</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=ring&value=0"
+      >Ring Off</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=ring&value=1"
+      >Ring On</a
+    >
+
+    <br />
+    <br />
+
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=direction&value=left"
+      >Left</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=direction&value=right"
+      >Right</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=direction&value=front"
+      >Front</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=direction&value=back"
+      >Back</a
+    >
+
+    <br />
+    <br />
+
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=direction&value=uturn"
+      >U-turn</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=direction&value=up"
+      >Up</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=direction&value=down"
+      >Down</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=direction&value=arrived"
+      >Arrived</a
+    >
+  </div>
+  <div style="flex-basis: 50%;">
+    <h1>Arudiono Instructions</h1>
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=waitingTime&value=20"
+      >20min</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=waitingTime&value=10"
+      >10min</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=waitingTime&value=3"
+      >3min</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=waitingTime&value=1"
+      >1min</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=waitingTime&value=0"
+      >0min</a
+    >
+
+    <br />
+    <br />
+
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=appointmentVenue&value=Marie Curie"
+      >Marie Curie</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=appointmentVenue&value=SR1"
+      >SR1</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=appointmentVenue&value=SR2"
+      >SR2</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=appointmentVenue&value=Da Vinci"
+      >Da Vinci</a
+    >
+
+    <br />
+    <br />
+
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=nsew&value=north"
+      >North</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=nsew&value=south"
+      >South</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=nsew&value=east"
+      >East</a
+    >
+    <a
+      class="btn btn-primary"
+      target="_blank"
+      href="/instructions?column=nsew&value=west"
+      >West</a
+    >
+  </div>
+</div>
+
+<br />
+<br />
+
+<h1>Database Functions</h1>
+<a class="btn btn-danger" target="_blank" href="/db?func=drop">
+  Drop Tables
+</a>
+<a class="btn btn-danger" target="_blank" href="/db?func=create">
+  Create Tables
+</a>
+<a class="btn btn-danger" target="_blank" href="/db?func=insert">
+  Insert Tables
+</a>
+<a class="btn btn-danger" target="_blank" href="/db?func=reset"
+  >Reset Database
+</a>
+
+{% endblock %}
