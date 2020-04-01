@@ -1,21 +1,31 @@
-{% extends "index.html" %}
+{% extends 'base.html' %} {% block head %}
+<title>Ticket</title>
+{% endblock %} {% block body %}
+<br />
+<h1>Ticket: A123456F</h1>
+<hr />
+<br />
 
-{% block content %}
-<table border="1">
+<div
+  class="ticket"
+  style="display: flex; flex-direction: row; align-items: center;"
+>
+  <div>
+    <img
+      src="../static/images/person.png"
+      class="person"
+      alt="{{result['name']}}"
+      style="width: 110px"
+    />
+  </div>
+  <div>
     {% for key, value in result.items() %}
-
-    <tr>
-        <th>
-            {{key.upper()}}
-        </th>
-        <td>
-            {{value.upper()}}
-        </td>
-    </tr>
-
+    <p>{{key.lower().capitalize()}}: {{value}}</p>
     {% endfor %}
-</table>
+  </div>
+</div>
 
-<p>Queue number: A1234</p>
-<p>Please collect your Naviband below</p>
-{% endblock %}
+<br />
+
+<img src="../static/images/naviband.png" alt="naviband" style="width: 110px" />
+Please collect your Naviband and enjoy your visit! {% endblock %}

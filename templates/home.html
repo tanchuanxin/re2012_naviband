@@ -1,0 +1,88 @@
+{% extends 'base.html' %} {% block head %}
+<title>Home</title>
+{% endblock %} {% block body %}
+<br />
+<h1>Welcome</h1>
+<hr />
+<br />
+
+<main role="main">
+  <div class="jumbotron" style="padding: 2rem 1rem">
+    <div style="display: flex; flex-direction: row; align-items: left;">
+      <div>
+        <img
+          src="../static/images/naviband.png"
+          class="person"
+          alt="naviband"
+          style="width: 110px; margin-right: 20px"
+        />
+      </div>
+      <div>
+        <h1>Naviband</h1>
+        <p>Revolutionizing the healthcare experience</p>
+        <p>
+          <a class="btn btn-primary" href="/register" role="button"
+            >Register &raquo;</a
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h3>RE2012 Team 4</h3>
+  </div>
+  <div
+    style="display: flex; flex-direction: row; overflow-wrap: normal; justify-content: space-evenly;"
+  >
+    <div style="flex-basis: 16%;">
+      <p>Hyun</p>
+      <img
+        style="max-width: 100px; max-height: 100px;"
+        src="../static/images/Hyun.jpg"
+        alt="Hyun"
+      />
+    </div>
+    <div style="flex-basis: 16%;">
+      <p>Hyun</p>
+      <img
+        style="max-width: 100px; max-height: 100px;"
+        src="../static/images/Chuan Xin.jpg"
+        alt="Chuan Xin"
+      />
+    </div>
+    <div style="flex-basis: 16%;">
+      <p>Hyun</p>
+      <img
+        style="max-width: 100px; max-height: 100px;"
+        src="../static/images/Andrew.jpg"
+        alt="Andrew"
+      />
+    </div>
+    <div style="flex-basis: 16%;">
+      <p>Aik Hui</p>
+      <img
+        style="max-width: 100px; max-height: 100px;"
+        src="../static/images/Aik Hui.jpg"
+        alt="Hyun"
+      />
+    </div>
+    <div style="flex-basis: 16%;">
+      <p>Jie Ren</p>
+      <img
+        style="max-width: 100px; max-height: 100px;"
+        src="../static/images/logo.png"
+        alt="Jie Ren"
+      />
+    </div>
+    <div style="flex-basis: 16%;">
+      <p>Matthew</p>
+      <img
+        style="max-width: 100px; max-height: 100px;"
+        src="../static/images/logo.png"
+        alt="Matthew"
+      />
+    </div>
+  </div>
+</main>
+{% endblock %}
