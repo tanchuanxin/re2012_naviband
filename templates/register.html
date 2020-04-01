@@ -1,23 +1,19 @@
-{% block content %}
+{% extends 'base.html' %} {% block head %}
+<title>Register</title>
+{% endblock %} {% block body %}
+<br />
+<h1>Register</h1>
+<hr />
 
-<h2>Sign Up</h2>
-<form action="" method ="post">
-    <p>
-        {{form.nric.label}} <br>
-        {{form.nric(size=30)}}
-    </p>
-    <p>
-        {{form.name.label}} <br>
-        {{form.name(size=30)}}
-    </p>
-    <p>
-        {{form.age.label}} <br>
-        {{form.age(size=3)}}
-    </p>
-    <p>
-        {{form.register()}}
-    </p>
+<form action="" method="POST">
+  <br />
 
+  {{form.nric(placeholder="NRIC", class="form-control")}}
+  <br />
+  {{form.name(placeholder="Name", class="form-control")}}
+  <br />
+  {{form.age(placeholder="Age", class="form-control")}}
+  <br />
+  {{form.register(class="btn btn-primary")}}
 </form>
-
 {% endblock %}

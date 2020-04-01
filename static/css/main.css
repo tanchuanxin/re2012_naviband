@@ -1,0 +1,19 @@
+body {
+  font-family: sans-serif;
+}
+
+.ticket {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.person {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.team-member {
+  max-width: 50px;
+  max-height: 50px;
+}
