@@ -11,6 +11,8 @@
 int scanTime = 5; //In seconds
 BLEScan* pBLEScan;
 int rssi01;
+int rssi02;
+int rssi03;
 
 class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
    void onResult(BLEAdvertisedDevice advertisedDevice) {
@@ -21,10 +23,10 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
 };
    
 //Wifi Stuff
-const char* ssid     = "Whizz";           // SSID of local network
-const char* password = "2billion";        // Password on network
-const char* ipv4_address = "192.168.1.20"; // IPv4 address obtained from cmd --> ipconfig
-const char* host_name = "Host: 192.168.1.20"; // hostname for localhost
+const char* ssid     = "AndroidAP";           // SSID of local network
+const char* password = "matthewljk";        // Password on network
+const char* ipv4_address = "192.168.43.101"; // IPv4 address obtained from cmd --> ipconfig
+const char* host_name = "Host: 192.168.43.101"; // hostname for localhost
 
 WiFiClient client;
 const char* servername=ipv4_address;
@@ -77,22 +79,27 @@ void loop() {
     if (device.haveName ()){
       Serial.print(F("Name -> "));
       Serial.println(device.getName().c_str());
-      String string1 = "Beacon01";
-      String string2 = "Beacon02";
-      String string3 = "Beacon03";
+      String string1 = "beacon1";
+      String string2 = "beacon2";
+      String string3 = "beacon3";
       String string4 = "Beacon04";
       if (strcmp(device.getName().c_str(), string1.c_str()) == 0){
         int rssi01 = device.getRSSI();
         Serial.println("Sending data");
         sendData(rssi01,01);
-        sendData(100,02);
         Serial.println(rssi01);
       }
       else if(strcmp(device.getName().c_str(), string2.c_str()) == 0){
         int rssi02 = device.getRSSI();
+        Serial.println("Sending data");
+        sendData(rssi02,02);
+        Serial.println(rssi02);
       }
       else if(strcmp(device.getName().c_str(), string3.c_str()) == 0){
         int rssi03 = device.getRSSI();
+        Serial.println("Sending data");
+        sendData(rssi03,03);
+        Serial.println(rssi03);
       }
       else if(strcmp(device.getName().c_str(), string4.c_str()) == 0){
         int rssi04 = device.getRSSI();
@@ -100,7 +107,7 @@ void loop() {
     }
   }
   // Wifi for sending BLE data
-        delay(1000);
+        delay(3000);
 }
 
 void sendData(int rssival,int BID)
