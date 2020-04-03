@@ -119,5 +119,4 @@ void getInstructions()
   
   String appointmentVenue = doc["appointmentVenue"];
   Serial.println("LOOK HERE" + appointmentVenue);
-
 }
