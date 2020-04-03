@@ -99,6 +99,7 @@ def getdata():
     data = db_helper(
         '''SELECT * FROM instructions WHERE queueNumber = "A123456F"''')
 
+    data = data[0]
     return jsonify(data)
 
 
