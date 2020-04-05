@@ -6,7 +6,7 @@ from flask import Flask, jsonify
 from flask import render_template, request, flash
 from flask_mysqldb import MySQL
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
-from forms import RegisterForm
+from forms import RegisterForm, AppointmentForm
 
 app = Flask(__name__)
 
@@ -52,7 +52,7 @@ def database(input=None):
     elif func == "create":
         db_helper('''CREATE TABLE users (nric CHAR(9) NOT NULL PRIMARY KEY, name VARCHAR(45) NOT NULL, age TINYINT NOT NULL, lastUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)''')
         db_helper('''CREATE TABLE ble_data (beaconID VARCHAR(45) NOT NULL PRIMARY KEY, rssiValue INT NULL, lastUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)''')
-        db_helper('''CREATE TABLE instructions (queueNumber CHAR(8) NOT NULL PRIMARY KEY, vibrate TINYINT NOT NULL, ring TINYINT NOT NULL, direction VARCHAR(10) DEFAULT NULL, waitingTime INT NOT NULL, nsew VARCHAR(5) DEFAULT NULL, appointmentVenue VARCHAR(45) DEFAULT NULL, lastUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)''')
+        db_helper('''CREATE TABLE instructions (queueNumber CHAR(8) NOT NULL PRIMARY KEY, vibrate TINYINT NOT NULL, ring TINYINT NOT NULL, direction VARCHAR(10) DEFAULT NULL, waitingTime INT NOT NULL, nsew VARCHAR(5) DEFAULT NULL, appointmentVenue VARCHAR(45) DEFAULT NULL, appointmentTime VARCHAR(4) DEFAULT NULL, lastUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)''')
 
     # /db/?func=insert
     elif func == "insert":
@@ -95,7 +95,7 @@ def senddata():
 
 # used by arduino to retrieve instructions from server
 @app.route('/getInstructions', methods=['GET'])
-def getdata():
+def getInstructions():
     data = db_helper(
         '''SELECT * FROM instructions WHERE queueNumber = "A123456F"''')
 
@@ -139,9 +139,30 @@ def ticket():
     return render_template('ticket.html')
 
 # Control panel to trigger arduino
-@app.route('/track', methods=['GET', 'POST'])
-def track():
-    return render_template('track.html')
+@app.route('/doctorsconsole', methods=['GET', 'POST'])
+def doctorsconsole():
+    form = AppointmentForm()
+    if form.is_submitted():
+        result = request.form
+        print(result)
+
+        db_helper('''UPDATE instructions SET appointmentVenue = %s, waitingTime = %s, appointmentTime = %s WHERE queueNumber = %s''',
+                  (result['venue'], '30', result['time'], result['ticket']))
+
+        instructions = db_helper(
+            '''SELECT * FROM instructions WHERE queueNumber=%s''', (result['ticket'],))
+        print(instructions)
+
+        result = result.copy()
+        result.poplist('book')
+
+        return render_template('appointment.html', result=result)
+    return render_template('doctorsconsole.html', form=form)
+
+# Ticket for registered user
+@app.route('/appointment', methods=['GET', 'POST'])
+def appointment():
+    return render_template('appointment.html')
 
 # Control panel to trigger arduino
 @app.route('/commands', methods=['GET', 'POST'])

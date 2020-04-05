@@ -7,3 +7,10 @@ class RegisterForm(FlaskForm):
     name = StringField('Name')
     age = IntegerField('Age')
     register = SubmitField("Register")
+
+
+class AppointmentForm(FlaskForm):
+    ticket = StringField('Ticket')
+    venue = StringField('Venue')
+    time = StringField('Time')
+    book = SubmitField('Book appointment')
