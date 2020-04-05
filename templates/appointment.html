@@ -1,0 +1,30 @@
+{% extends 'base.html' %} {% block head %}
+<title>Appointment</title>
+{% endblock %} {% block body %}
+<br />
+<h1>New Appointment</h1>
+<hr />
+<br />
+
+<div
+  class="ticket"
+  style="display: flex; flex-direction: row; align-items: center;"
+>
+  <div>
+    <img
+      src="../static/images/appointment.png"
+      class="person"
+      alt="appointment"
+      style="width: 110px; margin-right: 10px"
+    />
+  </div>
+  <div>
+    {% for key, value in result.items() %}
+    <p>{{key.lower().capitalize()}}: {{value}}</p>
+    {% endfor %}
+  </div>
+</div>
+
+<br />
+<img src="../static/images/naviband.png" alt="naviband" style="width: 110px" />
+Just follow your Naviband! {% endblock %}

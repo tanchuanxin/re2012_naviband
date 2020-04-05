@@ -1,0 +1,19 @@
+{% extends 'base.html' %} {% block head %}
+<title>Doctor's Console</title>
+{% endblock %} {% block body %}
+<br />
+<h1>Doctor's Console</h1>
+<hr />
+
+<form action="" method="POST">
+  <br />
+
+  {{form.ticket(placeholder="Ticket", class="form-control")}}
+  <br />
+  {{form.venue(placeholder="Venue", class="form-control")}}
+  <br />
+  {{form.time(placeholder="Time", class="form-control")}}
+  <br />
+  {{form.book(class="btn btn-primary")}}
+</form>
+{% endblock %}
