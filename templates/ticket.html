@@ -2,7 +2,7 @@
 <title>Ticket</title>
 {% endblock %} {% block body %}
 <br />
-<h1>Ticket: A123456F</h1>
+<h1>Ticket: 9385</h1>
 <hr />
 <br />
 
@@ -15,7 +15,7 @@
       src="../static/images/person.png"
       class="person"
       alt="{{result['name']}}"
-      style="width: 110px"
+      style="width: 110px;"
     />
   </div>
   <div>
@@ -25,7 +25,24 @@
   </div>
 </div>
 
+<div
+  class="ticket"
+  style="display: flex; flex-direction: row; align-items: center;"
+>
+  <div>
+    <img
+      src="../static/images/locationpin.png"
+      class="person"
+      alt="location"
+      style="width: 90px;"
+    />
+  </div>
+  <div>
+    Please proceed to Faraday Clinic! Dr. Teo will attend to you
+  </div>
+</div>
+
 <br />
 
-<img src="../static/images/naviband.png" alt="naviband" style="width: 110px" />
+<img src="../static/images/naviband.png" alt="naviband" style="width: 90px;" />
 Please collect your Naviband and enjoy your visit! {% endblock %}

@@ -58,11 +58,11 @@ def database(input=None):
     elif func == "insert":
         db_helper(
             '''INSERT IGNORE INTO users (nric, name, age) VALUES ('S1234567A', 'Tan Chuan Xin', 23)''')
-        for i in range(1, 13):
+        for i in range(1, 10):
             db_helper(
                 '''INSERT IGNORE INTO ble_data (beaconID, rssiValue) VALUES (%s, %s)''', ("beacon"+str(i), 0))
         db_helper(
-            '''INSERT IGNORE INTO instructions (queueNumber, vibrate, ring, waitingTime) VALUES (%s, %s, %s, %s)''', ("A123456F", 0, 0, 0))
+            '''INSERT IGNORE INTO instructions (queueNumber, vibrate, ring, waitingTime) VALUES (%s, %s, %s, %s)''', ("9385", 0, 0, 0))
 
     # /db/?func=reset
     elif func == "reset":
@@ -97,7 +97,7 @@ def senddata():
 @app.route('/getInstructions', methods=['GET'])
 def getInstructions():
     data = db_helper(
-        '''SELECT * FROM instructions WHERE queueNumber = "A123456F"''')
+        '''SELECT * FROM instructions WHERE queueNumber = "9385"''')
 
     data = data[0]
     return jsonify(data)
@@ -156,7 +156,11 @@ def doctorsconsole():
         result = result.copy()
         result.poplist('book')
 
-        return render_template('appointment.html', result=result)
+        if result['venue'] == 'Pharmacy':
+            return render_template('appointment.html', result=result, venue='Pharmacy')
+        else:
+            return render_template('appointment.html', result=result, venue='Dr. So Clinic')
+
     return render_template('doctorsconsole.html', form=form)
 
 # Ticket for registered user
@@ -181,27 +185,27 @@ def instructions():
 
     if column == 'vibrate':
         db_helper('''UPDATE instructions SET vibrate = %s WHERE queueNumber = %s''',
-                  (int(value), "A123456F"))
+                  (int(value), "9385"))
 
     if column == 'ring':
         db_helper('''UPDATE instructions SET ring = %s WHERE queueNumber = %s''',
-                  (int(value), "A123456F"))
+                  (int(value), "9385"))
 
     if column == "waitingTime":
         db_helper('''UPDATE instructions SET waitingTime = %s WHERE queueNumber = %s''',
-                  (int(value), "A123456F"))
+                  (int(value), "9385"))
 
     if column == 'direction':
         db_helper('''UPDATE instructions SET direction = %s WHERE queueNumber = %s''',
-                  (value, "A123456F"))
+                  (value, "9385"))
 
     if column == "appointmentVenue":
         db_helper('''UPDATE instructions SET appointmentVenue = %s WHERE queueNumber = %s''',
-                  (value, "A123456F"))
+                  (value, "9385"))
 
     if column == "nsew":
         db_helper('''UPDATE instructions SET nsew = %s WHERE queueNumber = %s''',
-                  (value, "A123456F"))
+                  (value, "9385"))
 
     response = {
         "Instruction": column,
