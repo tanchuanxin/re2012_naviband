@@ -15,7 +15,7 @@
       src="../static/images/appointment.png"
       class="person"
       alt="appointment"
-      style="width: 110px; margin-right: 10px"
+      style="width: 110px; margin-right: 10px;"
     />
   </div>
   <div>
@@ -25,6 +25,30 @@
   </div>
 </div>
 
+<div
+  class="ticket"
+  style="display: flex; flex-direction: row; align-items: center;"
+>
+  <div>
+    <img
+      src="../static/images/locationpin.png"
+      class="person"
+      alt="location"
+      style="width: 90px;"
+    />
+  </div>
+  {% if venue=="Pharmacy" %}
+  <div>
+    Please proceed to Pharmacy!
+  </div>
+  {% else %}
+
+  <div>
+    Please proceed to Dr. So Clinic! Dr. So will attend to you
+  </div>
+  {% endif %}
+</div>
+
 <br />
-<img src="../static/images/naviband.png" alt="naviband" style="width: 110px" />
+<img src="../static/images/naviband.png" alt="naviband" style="width: 110px;" />
 Just follow your Naviband! {% endblock %}
