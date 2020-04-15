@@ -1,7 +1,7 @@
 '''=================================================================================================
                                         IMPORTS AND CONFIG
 ================================================================================================='''
-# Imports
+# Imports 
 from flask import Flask, jsonify
 from flask import render_template, request, flash
 from flask_mysqldb import MySQL
