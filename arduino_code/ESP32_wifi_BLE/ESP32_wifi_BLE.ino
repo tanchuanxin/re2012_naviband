@@ -13,6 +13,7 @@ BLEScan* pBLEScan;
 int rssi01;
 int rssi02;
 int rssi03;
+int rssi04;
 
 class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
    void onResult(BLEAdvertisedDevice advertisedDevice) {
@@ -51,6 +52,7 @@ void setup() {
   
   Serial.println("Connected to WiFi");
   delay(1000);
+  WiFi.mode(WIFI_STA);
   Serial.println("------------Finish WiFi setup------------");
 
   //BLE
@@ -64,6 +66,7 @@ void setup() {
   pBLEScan->setActiveScan(true); //active scan uses more power, but get results faster
   pBLEScan->setInterval(100);
   pBLEScan->setWindow(99);  // less or equal setInterval value
+
 
 }
 
@@ -82,11 +85,11 @@ void loop() {
       String string1 = "beacon1";
       String string2 = "beacon2";
       String string3 = "beacon3";
-      String string4 = "Beacon04";
+      String string4 = "beacon4";
       if (strcmp(device.getName().c_str(), string1.c_str()) == 0){
         int rssi01 = device.getRSSI();
         Serial.println("Sending data");
-        sendData(rssi01,01);
+        sendData(rssi01,1);
         Serial.println(rssi01);
       }
       else if(strcmp(device.getName().c_str(), string2.c_str()) == 0){
@@ -103,22 +106,23 @@ void loop() {
       }
       else if(strcmp(device.getName().c_str(), string4.c_str()) == 0){
         int rssi04 = device.getRSSI();
+        Serial.println("Sending data");
+        sendData(rssi04,04);
+        Serial.println(rssi04);
       }
     }
   }
   // Wifi for sending BLE data
-        delay(3000);
+        delay(500);
 }
 
 void sendData(int rssival,int BID)
 {
-  if (client.connect(servername, 80)) {  //starts client connection, checks for connection
+  if (client.connect(servername, 443)) {  //starts client connection, checks for connection
     client.print("GET /sendData?beaconID=beacon");
     client.print(BID);
     client.print("&rssiValue=");
     client.print(rssival);
-//    client.print("&beaconID=beacon02&rssiValue=");
-//    client.print(rssi02);
     client.println("");
     client.println(host_name);
     client.println("User-Agent: Naviband");
