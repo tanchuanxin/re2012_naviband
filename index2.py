@@ -99,8 +99,6 @@ def senddata():
         "response": "Goodbye ESP32, from Flask. BLE data was received"
     }
 
-    navigation()
-
     return jsonify(response)
 
 # used by arduino to retrieve instructions from server
@@ -236,63 +234,41 @@ def currentLocationFinder():
         rssiValues[0]["beaconID"], rssiValues[1]["beaconID"]
     ]
 
+    print(top2_beacons)
 
-    # sound the alarm! about to be out of bounds
-    if top2_beacons[0] == "beacon1":
-        db_helper(
-            '''UPDATE instructions SET vibrate = 1 WHERE queueNumber = 9385''')
-
-
-    if top2_beacons == ["beacon1", "beacon2"] or top2_beacons == ["beacon2", "beacon1"]:
-        print("currentloc: at registration")
-        currentloc_y = 18
-        currentloc_x = 10
-        level = 1
-    elif top2_beacons == ["beacon2", "beacon3"] or top2_beacons == ["beacon3", "beacon2"] or top2_beacons == ["beacon1", "beacon3"] or top2_beacons == ["beacon3", "beacon1"]:
-        currentloc_y = 41
-        currentloc_x = 10
-        level = 1
-    elif top2_beacons == ["beacon3", "beacon4"] or top2_beacons == ["beacon3", "beacon5"]:
+    if top2_beacons == ["beacon3", "beacon4"] or top2_beacons == ["beacon3", "beacon5"]:
         print("currentloc: midpoint of staircase")
         currentloc_y = 27
         currentloc_x = 11
-        level = 2
     elif top2_beacons == ["beacon4", "beacon3"] or top2_beacons == ["beacon4", "beacon5"]:
         print("currentloc: outside pharmacy")
         currentloc_y = 33
         currentloc_x = 5
-        level = 2
     elif top2_beacons == ["beacon5", "beacon3"] or top2_beacons == ["beacon5", "beacon4"] or top2_beacons == ["beacon5", "beacon6"]:
         print("currentloc: top of staircase")
         currentloc_y = 27
         currentloc_x = 5
-        level = 2
     elif top2_beacons == ["beacon6", "beacon7"] or top2_beacons == ["beacon6", "beacon5"] or top2_beacons == ["beacon6", "beacon8"]:
         print("currentloc: middle of top corridor")
         currentloc_y = 16
         currentloc_x = 5
-        level = 2
     elif top2_beacons == ["beacon7", "beacon6"] or top2_beacons == ["beacon7", "beacon8"]:
         print("currentloc: seats at top corridor")
         currentloc_y = 7
         currentloc_x = 5
-        level = 2
     elif top2_beacons == ["beacon8", "beacon7"] or top2_beacons == ["beacon8", "beacon6"] or top2_beacons == ["beacon8", "beacon9"]:
         print("currentloc: prof teo clinic")
         currentloc_y = 7
-        currentloc_x = 10   
-        level = 2     
+        currentloc_x = 10        
     elif top2_beacons == ["beacon9", "beacon8"]:
         print("currentloc: prof so clinic")
         currentloc_y = 7
         currentloc_x = 22   
-        level = 2
     else:
         currentloc_y = None
         currentloc_x = None
-        level = None
 
-    return [currentloc_y, currentloc_x, level]
+    return [currentloc_y, currentloc_x]
 
 
 # Finding destination based on appointment made
@@ -304,32 +280,26 @@ def destinationFinder():
         # this is actually the coordinate for the couches, not the room
         destination_y = 7
         destination_x = 5
-        level = 2
     elif destination[0]["appointmentVenue"] == "Prof So Clinic":
         # this is actually the coordinate for the couches, not the room
         destination_y = 7
         destination_x = 22
-        level = 2
     elif destination[0]["appointmentVenue"] == "Pharmacy":
         # this is in the pharmacy 
         destination_y = 33
         destination_x = 5
-        level = 2
     elif destination[0]["appointmentVenue"] == "Registration":
-        # to registration door
-        destination_y = 18
-        destination_x = 10
-        level = 1
+        # this is on level 1, need to map
+        pass
     else:
         destination_y = None
         destination_x = None
-        level = None
     
-    return [destination_y, destination_x, level]
+    return [destination_y, destination_x]
 
 
-# Finding the path based on the current location and destination 
-def pathfinder(start_y, start_x, start_level, end_y, end_x, end_level):
+# Finding the path based on the current location and destination
+def pathfinder(start_y, start_x, end_y, end_x):
     # Create a map using a 2D-list.
     # Any value smaller or equal to 0 describes an obstacle.
     # Any number bigger than 0 describes the weight of a field that can be walked on.
@@ -341,34 +311,7 @@ def pathfinder(start_y, start_x, start_level, end_y, end_x, end_level):
     # Note: you can use negative values to describe different types of obstacles.
     # It does not make a difference for the path finding algorithm but it might be useful for your later map evaluation.
 
-    level1_matrix = [
-
-        [0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,0,0,0,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,0,0,0,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,0,0,0,1,1],
-        [1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,0,0,0,1,1],
-
-        [1,1,1,1,1,1,   1,1,1,1,1,1,   0,0,0,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,0,0,0,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,0,0,0,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,1,   1,0,0,0,0,0,   0,0,0,0,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,1,   1,0,0,0,0,0,   0,0,0,0,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1],
-
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,0,0,0,0,0],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   0,0,0,0,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1],
-
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,0,0,1,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,0,0,1,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,0,0,1,1,1],
-        [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,0,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,0,0,1,1,1],
-        [0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   1,1,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0],
-
-    ]
-
+    level1_matrix = []
     level2_matrix = [
         
         [1,1,1,1,1,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0],
@@ -399,30 +342,13 @@ def pathfinder(start_y, start_x, start_level, end_y, end_x, end_level):
         [0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   0,1,1,1,1,1,   1,1,1,1,0,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,0],
         [0,1,1,1,1,0,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,0],
         [0,1,1,1,1,0,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   0,1,1,1,1,1,   1,1,1,1,1,1,   1,1,1,1,1,1,   1,1,0,1,1,1,   1,1,1,1,1,0],
-        [0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0],
+        [0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0,   0,0,0,0,0,0]
     ]
 
     # we create a new grid from this map representation. This will create Node instances for every element of our map.
     # It will also set the size of the map. We assume that your map is a square, so the size height is defined by the
     # length of the outer list and the width by the length of the first list inside it.
-    if start_level == 1:
-        grid = Grid(matrix=level1_matrix)
-    elif start_level == 2:
-        grid = Grid(matrix=level2_matrix)
-
-
-    # modify the endpoints if it is on another level, to be the intermediate staircase based on the correct level 
-    # this ensures we can find a path
-    if start_level == 1 and end_level == 2:
-        end_y = 41
-        end_x = 10
-        end_level = 1
-    elif start_level == 2 and end_level == 1:
-        end_y = 27
-        end_x = 11
-        end_level = 2
-
-
+    grid = Grid(matrix=level2_matrix)
 
     # we get the start (top-left) and endpoint (bottom-right) from the map:
     # IMPORTANT: THE GRID COORDINATES ARE GIVEN AS COLUMN, ROW
@@ -450,27 +376,17 @@ def pathfinder(start_y, start_x, start_level, end_y, end_x, end_level):
     print(grid.grid_str(path=path, start=start, end=end))
     print("\nThe actual path coordinates: ", path)
 
-    return [grid.grid_str(path=path, start=start, end=end),path]
+    return path
 
 
 # Give the direction of the next step to take
 def nextStepDirectionFinder(current_location, destination):
-    if current_location == [18,10,1] and destination == [7,5,2]:
-        # going prof teo clinic. go to stairs by walking straight (out of registration can see stairs)
-        db_helper(
-            '''UPDATE instructions SET command = 12''')
-
-    elif current_location == [41,10,1] and destination == [7,5,2]:
-        # going prof teo clinic. climb up stairs
-        db_helper(
-            '''UPDATE instructions SET command = 16''')            
-
-    elif current_location == [27,11,2] and destination == [7,5,2]:
-        # going prof teo clinic. climb up the stairs
+    if current_location == [27, 11] and destination == [7,5]:
+        # going prof teo clinic. Climb up the stairs
         db_helper(
             '''UPDATE instructions SET command = 16''')
 
-    elif current_location == [27,5,2] and destination == [7,5,2]:
+    elif current_location == [27, 5] and destination == [7,5]:
         # going prof teo clinic. turn left. go straight
         db_helper(
             '''UPDATE instructions SET command = 11''') 
@@ -480,30 +396,22 @@ def nextStepDirectionFinder(current_location, destination):
         db_helper(
             '''UPDATE instructions SET command = 12''') 
 
-    elif current_location == [16,5,2] and destination == [7,5,2]:
+    elif current_location == [16, 5] and destination == [7,5]:
         # going prof teo clinic. go straight
         db_helper(
             '''UPDATE instructions SET command = 12''') 
         
-    elif current_location == [7,5,2] and destination == [7,5,2]:
-        # going prof teo clinic. reached. set wait time
+    elif current_location == [7, 5] and destination == [7,5]:
+        # going prof teo clinic. reached. set 10 minute wait time
         db_helper(
             '''UPDATE instructions SET command = 19''') 
 
         time.sleep(10)
+
         db_helper(
             '''UPDATE instructions SET command = 22''')             
-        time.sleep(5)
-        db_helper(
-            '''UPDATE instructions SET command = 23''')                
-        time.sleep(5)
-        db_helper(
-            '''UPDATE instructions SET command = 25''')          
-        time.sleep(5)
-        db_helper(
-            '''UPDATE instructions SET command = 24''')                      
 
-    elif current_location == [7,5,2] and destination == [7,22,2]:
+    elif current_location == [7, 5] and destination == [7,22]:
         # going prof so clinic. turn right. go straight
         db_helper(
             '''UPDATE instructions SET command = 13''') 
@@ -513,30 +421,22 @@ def nextStepDirectionFinder(current_location, destination):
         db_helper(
             '''UPDATE instructions SET command = 12''')      
 
-    elif current_location == [7,10,2] and destination == [7,22,2]:
+    elif current_location == [7, 10] and destination == [7,22]:
         # going prof so clinic. go straight
         db_helper(
             '''UPDATE instructions SET command = 12''')                 
 
-    elif current_location == [7,22,2] and destination == [7,22,2]:
-        # going prof so clinic. reached. Set wait time
+    elif current_location == [7, 22] and destination == [7,22]:
+        # going prof so clinic. reached. Set 10 minutes wait time
         db_helper(
             '''UPDATE instructions SET command = 20''') 
 
         time.sleep(10)
-        db_helper(
-            '''UPDATE instructions SET command = 22''')             
-        time.sleep(5)
-        db_helper(
-            '''UPDATE instructions SET command = 23''')                
-        time.sleep(5)
-        db_helper(
-            '''UPDATE instructions SET command = 25''')          
-        time.sleep(5)
-        db_helper(
-            '''UPDATE instructions SET command = 24''')  
 
-    elif current_location == [7,22,2] and destination == [33,5,2]:
+        db_helper(
+            '''UPDATE instructions SET command = 22''')     
+
+    elif current_location == [7, 22] and destination == [33,5]:
         # going pharmacy. turn left. go straight
         db_helper(
             '''UPDATE instructions SET command = 11''') 
@@ -546,12 +446,12 @@ def nextStepDirectionFinder(current_location, destination):
         db_helper(
             '''UPDATE instructions SET command = 12''')      
 
-    elif current_location == [7,10,2] and destination == [33,5,2]:
+    elif current_location == [7, 10] and destination == [33,5]:
         # going pharmacy. go straight
         db_helper(
             '''UPDATE instructions SET command = 12''')        
 
-    elif current_location == [7,5,2] and destination == [33,5,2]:
+    elif current_location == [7, 5] and destination == [33,5]:
         # going pharmacy. turn right. go straight
         db_helper(
             '''UPDATE instructions SET command = 13''') 
@@ -561,94 +461,40 @@ def nextStepDirectionFinder(current_location, destination):
         db_helper(
             '''UPDATE instructions SET command = 12''')           
 
-    elif current_location == [16,5,2] and destination == [33,5,2]:
+    elif current_location == [16, 5] and destination == [33,5]:
         # going pharmacy. go straight
         db_helper(
             '''UPDATE instructions SET command = 12''')                    
 
-    elif current_location == [27,5,2] and destination == [33,5,2]:
+    elif current_location == [27, 5] and destination == [33,5]:
         # going pharmacy. go straight
         db_helper(
             '''UPDATE instructions SET command = 12''')              
 
-    elif current_location == [33,5,2] and destination == [33,5,2]:
+    elif current_location == [33, 5] and destination == [33,5]:
         # going pharmacy. reached. set 5 minute wait time
         db_helper(
             '''UPDATE instructions SET command = 21''')    
 
-        time.sleep(10)
-        db_helper(
-            '''UPDATE instructions SET command = 22''')             
         time.sleep(5)
+
         db_helper(
-            '''UPDATE instructions SET command = 23''')                
-        time.sleep(5)
-        db_helper(
-            '''UPDATE instructions SET command = 25''')          
-        time.sleep(5)
-        db_helper(
-            '''UPDATE instructions SET command = 24''')                             
+            '''UPDATE instructions SET command = 23''')                             
     
-    elif current_location == [33,5,2] and destination == [18,10,1]:
-        # going registration. turn left. go straight
-        db_helper(
-            '''UPDATE instructions SET command = 11''')    
-
-        time.sleep(3)
-
-        db_helper(
-            '''UPDATE instructions SET command = 12''')             
-
-    elif current_location == [27,5,2] and destination == [18,10,1]:
-        # going registration. turn left. go down
-        db_helper(
-            '''UPDATE instructions SET command = 11''')    
-
-        time.sleep(3)
-
-        db_helper(
-            '''UPDATE instructions SET command = 15''')     
-
-    elif current_location == [27,11,2] and destination == [18,10,1]:
-        # going registration. climb down. go straight
-        db_helper(
-            '''UPDATE instructions SET command = 15''')    
-
-        time.sleep(3)
-
-        db_helper(
-            '''UPDATE instructions SET command = 12''')         
-
-    elif current_location == [41,10,1] and destination == [18,10,1]:
-        # going registration. go straight
-        db_helper(
-            '''UPDATE instructions SET command = 12''')        
-
-    elif current_location == [18,10,1] and destination == [18,10,1]:
-        # going registration. reached
-        db_helper(
-            '''UPDATE instructions SET command = 18''')                               
 
 @app.route('/navigation')
 def navigation(): 
-    current_location = currentLocationFinder()      
+    current_location = currentLocationFinder()
     print("current location: ", current_location)
     destination = destinationFinder()
     print("destination: ", destination)
-    [grid,path] = pathfinder(current_location[0], current_location[1], current_location[2], destination[0], destination[1], destination[2])
+    path = pathfinder(current_location[0], current_location[1], destination[0], destination[1])
+
     nextStepDirectionFinder(current_location, destination)
-
-    # need three more characters than the number of rows for delimiters and newline character 
-    if current_location[2] == 1:
-        no_column = 45  
-    elif current_location[2] == 2:
-        no_column = 63
+    
 
 
-    grid = [grid[i:i+no_column] for i in range(0, len(grid), no_column)]
-
-
-    return render_template("navigation.html", data=grid[1:-1])
+    return 'ok'
 
 
 
