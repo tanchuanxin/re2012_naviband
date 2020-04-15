@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block head %}
+<title>Navigation</title>
+{% endblock %} {% block body %}
+<br />
+<h1>Navigation</h1>
+<hr />
+
+{% for row in data %}
+    <span style="font-family: 'Courier New', Courier, monospace;">
+        <pre style="margin: 0; padding: 0">{{row}}</pre>      
+    </span>
+{% endfor %}
+{% endblock %}
+
