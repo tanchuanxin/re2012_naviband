@@ -97,7 +97,7 @@ def senddata():
 @app.route('/getInstructions', methods=['GET'])
 def getInstructions():
     data = db_helper(
-        '''SELECT * FROM instructions WHERE queueNumber = "A123456F"''')
+        '''SELECT * FROM instructions WHERE queueNumber = "9385"''')
 
     data = data[0]
     return jsonify(data)
@@ -216,7 +216,7 @@ def instructions():
 ================================================================================================='''
 # initialize the application on localhost, based on the IPv4 address
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=443)
 
 # if __name__ == "__main__":
 #     app.run(debug=True)
